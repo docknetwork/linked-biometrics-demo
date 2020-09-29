@@ -1,0 +1,27 @@
+#vending-machine {
+    height: 45vh;
+    width: 30vh;
+    background: #1a345e;
+    margin: 1em;
+    padding: 1em;
+    color: #8899ff;
+}
+
+#canvas {
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+#videop {
+    position: relative;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
