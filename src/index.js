@@ -15,6 +15,8 @@ const otherimage = document.getElementById('otherimage');
 const textoutput = document.getElementById('textoutput');
 const urlinput = document.getElementById('urlinput');
 
+let targetFace = null; // this will hold the face descriptor the user needs to match
+
 Promise.all([
   linkWebcam(video),
   fa.nets.tinyFaceDetector.loadFromUri('/models'),
@@ -49,18 +51,21 @@ async function onFrame(canvas, video) {
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
   let rd = fa.resizeResults(detections, vsize(video));
   fa.draw.drawFaceLandmarks(canvas, rd);
+  displayText(humanReadableComparison(detections));
+}
+
+function humanReadableComparison(detections) {
+  if (targetFace === null) return 'Awaiting credential.';
+  if (detections.length === 0) return 'How do you expect me to verify the age of an empty room?';
+  if (detections.length > 1) return 'One person at a time please.';
+  assert(detections.length === 1, 'detections.length !== 1, this was supposed to be checked above');
+  const dist = distance(detections[0].descriptor, targetFace);
+  if (dist < maxMatchDistance) return `Difference: ${dist}. Match!`;
+  return `Difference: ${dist}. No match.`;
 }
 
 function vsize(video) {
   return { width: video.videoWidth, height: video.videoHeight };
-}
-
-async function compareFace(video, image) {
-  const [vd, id] = await Promise.all([
-    getSingleFaceDescriptor(video),
-    getSingleFaceDescriptor(image),
-  ]);
-  return distance(vd, id);
 }
 
 async function getSingleFaceDescriptor(image) {
@@ -75,13 +80,8 @@ async function onFooButton() {
   const iri = urlinput.value;
   try {
     let image = await fetchImage(iri);
+    targetFace = await getSingleFaceDescriptor(image);
     await displayOtherImage(image);
-    const distance = await compareFace(video, image);
-    if (distance >= maxMatchDistance) {
-      displayText(`Difference: ${distance}. No match.`);
-    } else {
-      displayText(`Difference: ${distance}. Match!`);
-    }
   } catch (e) {
     displayText(`Error: ${e}`);
   }
@@ -96,14 +96,14 @@ async function displayOtherImage(image) {
   otherimage.appendChild(canvas);
 }
 
-async function displayText(txt, pre) {
+async function displayText(txt) {
   textoutput.innerHTML = txt.replace('<', '&lt').replace('>', '&gt');
 }
 
 // return the euclian distance between two arrays
 function distance(as, bs) {
-  assert(as.length !== undefined);
-  assert(as.length === bs.length);
+  assert(as.length !== undefined, '"distance" recieved a non-array input');
+  assert(as.length === bs.length, 'cant calculate distance beween vectors of different lengths');
   let sum = as.map((_, i) => Math.pow(as[i] - bs[i], 2)).reduce((a, b) => a + b, 0);
   return Math.sqrt(sum);
 }
