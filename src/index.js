@@ -28,16 +28,15 @@ Promise.all([
 
 foobutton.onclick = onFooButton;
 
-function linkWebcam(video) {
-  navigator.getUserMedia(
-    { video: {} },
-    stream => {
-      video.srcObject = stream
-    },
-    err => { throw err },
-  );
-  return new Promise(resolve => {
-    video.addEventListener('play', resolve);
+async function linkWebcam(video) {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: {} });
+  video.srcObject = stream;
+  await firstEvent(video, 'play');
+}
+
+async function firstEvent(eventTarget, event) {
+  return await new Promise(resolve => {
+    eventTarget.addEventListener(event, resolve, { once: true });
   });
 }
 
