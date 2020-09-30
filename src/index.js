@@ -1,7 +1,7 @@
-import rules from './rules';
 import 'style-loader!css-loader!./styles.css';
 import * as fa from 'face-api.js';
 import assert from 'assert';
+import { verifyAge } from './verify';
 
 // how dissimilar can faces be while still counting as a match
 // 0.6 is usually what the faceapi library author usually goes with but let's
@@ -10,10 +10,10 @@ const maxMatchDistance = 0.5;
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
-const foobutton = document.getElementById('foobutton');
 const otherimage = document.getElementById('otherimage');
 const textoutput = document.getElementById('textoutput');
-const urlinput = document.getElementById('urlinput');
+const vpupload = document.getElementById('vpupload');
+const showpresentation = document.getElementById('showpresentation');
 
 let targetFace = null; // this will hold the face descriptor the user needs to match
 
@@ -26,7 +26,7 @@ Promise.all([
   everyFrame(async () => onFrame(canvas, video));
 });
 
-foobutton.onclick = onFooButton;
+vpupload.oninput = onVpUpload;
 
 async function linkWebcam(video) {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: {} });
@@ -67,23 +67,24 @@ function vsize(video) {
   return { width: video.videoWidth, height: video.videoHeight };
 }
 
-async function getSingleFaceDescriptor(image) {
-  let detections = await detectFaces(image);
-  if (detections.length !== 1) {
-    throw new Error(`Incorrect number of faces in image. Expected 1, got ${detections.length}.`);
+async function onVpUpload() {
+  try {
+    const blob = unwrapSingle(vpupload.files);
+    const presentaion = JSON.parse(await blob.text());
+    displayPresentation(JSON.stringify(presentaion, null, 2));
+    const imageuri = await verifyAge(presentaion);
+    const image = await fetchImage(imageuri);
+    await displayOtherImage(image);
+    targetFace = unwrapSingle(await detectFaces(image), 'provided image has multiple faces').descriptor;
+  } catch (e) {
+    alert(e);
   }
-  return detections[0].descriptor;
 }
 
-async function onFooButton() {
-  const iri = urlinput.value;
-  try {
-    let image = await fetchImage(iri);
-    targetFace = await getSingleFaceDescriptor(image);
-    await displayOtherImage(image);
-  } catch (e) {
-    displayText(`Error: ${e}`);
-  }
+function unwrapSingle(array, otherwise = 'expected single element') {
+  assert(array.length !== undefined);
+  if (array.length !== 1) throw new Error(otherwise);
+  return array[0];
 }
 
 async function displayOtherImage(image) {
@@ -95,8 +96,16 @@ async function displayOtherImage(image) {
   otherimage.appendChild(canvas);
 }
 
-async function displayText(txt) {
-  textoutput.innerHTML = txt.replace('<', '&lt').replace('>', '&gt');
+function displayText(txt) {
+  textoutput.innerHTML = escape(txt);
+}
+
+function displayPresentation(txt) {
+  showpresentation.innerHTML = escape(txt);
+}
+
+function escape(str) {
+  return `${str}`.replace('<', '&lt').replace('>', '&gt');
 }
 
 // return the euclian distance between two arrays

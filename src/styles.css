@@ -5,6 +5,9 @@
     margin: 1em;
     padding: 1em;
     color: #8899ff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 #canvas {
@@ -20,8 +23,14 @@
 }
 
 body {
+    font-family: sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+}
+
+#showpresentation {
+    max-width: min(51em, 90vw);
+    overflow-x: auto;
 }
