@@ -1,3 +1,7 @@
+import * as poo from `@docknetwork/sdk/utils/vc`;
+// import {PublicKeySr25519, PublicKeyEd25519} from '@docknetwork/sdk/api';
+// TODO, you may have been importing `@docknetwork/sdk/util/vc` instead of `@docknetwork/sdk/utils/vc`
+
 // return data uri in the presentation that is shown to be a picture an individual who is "Old Enough"
 // It's possible for a presentation to imply multiple "Old Enough" certifications, but it makes the
 // demo simpler if we just return the first one we can prove.

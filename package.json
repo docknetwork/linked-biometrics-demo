@@ -23,6 +23,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@docknetwork/sdk": "^0.3.4",
     "face-api.js": "^0.22.2"
   }
 }
