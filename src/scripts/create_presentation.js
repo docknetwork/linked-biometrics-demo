@@ -2,7 +2,7 @@
 // env['ImageUri'] is a picture of someone who is "OldEnough"
 
 import { createCred, createPres, expand } from '../common';
-import { ageRoot, delegate1 } from '../didcache';
+import { ageRoot, delegate1, delegate2 } from '../didcache';
 import rules from '../rules';
 
 const clde = import('@docknetwork/sdk/src/utils/cd');
@@ -15,11 +15,17 @@ export async function createAgePresentation(imageUri) {
       issuerSk: ageRoot.privateKeyBase58,
       issuerPk: ageRoot.publicKeyBase58,
     }),
-    issueAgeCred({
+    issueDelegation({
       issuer: delegate1.did,
-      imageUri,
+      delegate: delegate2.did,
       issuerSk: delegate1.privateKeyBase58,
       issuerPk: delegate1.publicKeyBase58,
+    }),
+    issueAgeCred({
+      issuer: delegate2.did,
+      imageUri,
+      issuerSk: delegate2.privateKeyBase58,
+      issuerPk: delegate2.publicKeyBase58,
     })
   ]);
   const pres = await createPres(creds);

@@ -23,16 +23,23 @@
   <div id="showpresentationp">
     <pre id="showpresentation"></pre>
   </div>
-  <div id="issuing" hidden>
-    <p>
-      Hey, here's a secret for you, if you unhide this div you can issue your own demo credentials.
-      The private keys for demo issuers are already loaded for you to experiment with.
-    </p>
-    <input type="url" id="issuinginput"></input>
-    <button id="issuebutton">Issue to from image URL!</button>
-    <div>
-      Or issue from uploaded Image!
-      <input type="file" id="issuingupload" accept="image/*"></input>
+  <div>
+    <button
+      onclick="document.getElementById('issuing').removeAttribute('hidden')"
+      >
+      Issue your own.
+    </button>
+    <div id="issuing" hidden>
+      <p>
+	Hey, here's a secret: this demo will accept credentials issued by you.
+	The private keys for demo issuers are already loaded on this page. Go ahead, try it.
+      </p>
+      <input type="url" id="issuinginput"></input>
+      <button id="issuebutton">Issue to from image URL!</button>
+      <div>
+	Or issue from uploaded Image!
+	<input type="file" id="issuingupload" accept="image/*"></input>
+      </div>
     </div>
   </div>
 </body>

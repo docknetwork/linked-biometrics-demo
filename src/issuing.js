@@ -7,7 +7,7 @@ const issuinginput = document.getElementById('issuinginput');
 const issuingupload = document.getElementById('issuingupload');
 
 issuebutton.onclick = onIssueButton;
-issuingupload.onclick = onImageUpload;
+issuingupload.oninput = onImageUpload;
 
 async function onIssueButton() {
   const imageurl = issuinginput.value;
