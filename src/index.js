@@ -16,6 +16,7 @@ const otherimage = document.getElementById('otherimage');
 const textoutput = document.getElementById('textoutput');
 const vpupload = document.getElementById('vpupload');
 const showpresentation = document.getElementById('showpresentation');
+const waterbottle = document.getElementById('waterbottle');
 
 let targetFace = null; // this will hold the face descriptor the user needs to match
 
@@ -55,6 +56,11 @@ async function onFrame(canvas, video) {
   let rd = fa.resizeResults(detections, vsize(video));
   fa.draw.drawFaceLandmarks(canvas, rd);
   displayText(humanReadableComparison(detections));
+  if (isMatch(detections)) {
+    showBottle();
+  } else {
+    hideBottle();
+  }
 }
 
 function humanReadableComparison(detections) {
@@ -63,8 +69,17 @@ function humanReadableComparison(detections) {
   if (detections.length > 1) return 'One person at a time please.';
   assert(detections.length === 1, 'detections.length !== 1, this was supposed to be checked above');
   const dist = distance(detections[0].descriptor, targetFace);
-  if (dist < maxMatchDistance) return `Difference: ${dist}. Match!`;
-  return `Difference: ${dist}. No match.`;
+  if (dist < maxMatchDistance) return `Match! Difference: ${dist}.`;
+  return `No match. Difference: ${dist}.`;
+}
+
+function isMatch(detections) {
+  // this logic is a repeat of that in humanReadableComparison
+  if (targetFace === null) return false;
+  if (detections.length === 0) return false;
+  if (detections.length > 1) return false;
+  const dist = distance(detections[0].descriptor, targetFace);
+  return dist < maxMatchDistance;
 }
 
 function vsize(video) {
@@ -136,4 +151,12 @@ async function fetchImage(url) {
     throw new Error(`fetchImage - expected blob type to be of type image/*, instead have: ${blob.type}, for url: ${res.url}`);
   }
   return fa.bufferToImage(blob);
+}
+
+function hideBottle() {
+  waterbottle.style = "display: none"
+}
+
+function showBottle() {
+  waterbottle.style = ""
 }
