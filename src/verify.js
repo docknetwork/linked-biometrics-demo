@@ -1,5 +1,5 @@
 
-import { verifyPresentation } from './common';
+import { verifyPresentation, expand } from './common';
 import rules from './rules';
 import deepEq from 'deep-equal';
 
@@ -20,7 +20,7 @@ export async function verifyAge(presentation) {
   await verifyPresentation(presentation);
 
   // Get list of claims from presentation.
-  let ep = await jsonld.expand(presentation);
+  let ep = await expand(presentation);
   let trueClaims = await cd.acceptCompositeClaims(ep, rules);
 
   for (const [s, p, o] of trueClaims) {

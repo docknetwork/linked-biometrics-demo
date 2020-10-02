@@ -34,3 +34,12 @@ body {
     max-width: min(51em, 90vw);
     overflow-x: auto;
 }
+
+#issuing {
+    max-width: 30em;
+}
+
+#otherimage > * {
+    max-width: 95vw;
+    max-height: 45vh;
+}

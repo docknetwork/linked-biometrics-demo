@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dock Linked Biometrics Demo</title>
 </head>
 
@@ -21,6 +22,18 @@
   <div id="otherimage"></div>
   <div id="showpresentationp">
     <pre id="showpresentation"></pre>
+  </div>
+  <div id="issuing" hidden>
+    <p>
+      Hey, here's a secret for you, if you unhide this div you can issue your own demo credentials.
+      The private keys for demo issuers are already loaded for you to experiment with.
+    </p>
+    <input type="url" id="issuinginput"></input>
+    <button id="issuebutton">Issue to from image URL!</button>
+    <div>
+      Or issue from uploaded Image!
+      <input type="file" id="issuingupload" accept="image/*"></input>
+    </div>
   </div>
 </body>
 </html>

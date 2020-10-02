@@ -2,6 +2,8 @@ import 'style-loader!css-loader!./styles.css';
 import * as fa from 'face-api.js';
 import assert from 'assert';
 import { verifyAge } from './verify';
+import { } from './issuing';
+import { unwrapSingle } from './common';
 
 // how dissimilar can faces be while still counting as a match
 // 0.6 is usually what the faceapi library author usually goes with but let's
@@ -75,16 +77,14 @@ async function onVpUpload() {
     const imageuri = await verifyAge(presentaion);
     const image = await fetchImage(imageuri);
     await displayOtherImage(image);
-    targetFace = unwrapSingle(await detectFaces(image), 'provided image has multiple faces').descriptor;
+    targetFace = unwrapSingle(
+      await detectFaces(image),
+      'the number of faces in the image provided was not 1'
+    ).descriptor;
   } catch (e) {
-    alert(e);
+    console.error(e);
+    alert('bad verification. see developer console');
   }
-}
-
-function unwrapSingle(array, otherwise = 'expected single element') {
-  assert(array.length !== undefined);
-  if (array.length !== 1) throw new Error(otherwise);
-  return array[0];
 }
 
 async function displayOtherImage(image) {
