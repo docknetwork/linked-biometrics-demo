@@ -3,7 +3,7 @@ import * as fa from 'face-api.js';
 import assert from 'assert';
 import { verifyAge } from './verify';
 import { } from './issuing';
-import { unwrapSingle } from './common';
+import { unwrapSingle, alertOnError } from './common';
 
 // how dissimilar can faces be while still counting as a match
 // 0.6 is usually what the faceapi library author usually goes with but let's
@@ -19,16 +19,18 @@ const showpresentation = document.getElementById('showpresentation');
 
 let targetFace = null; // this will hold the face descriptor the user needs to match
 
-Promise.all([
-  linkWebcam(video),
-  fa.nets.tinyFaceDetector.loadFromUri('/models'),
-  fa.nets.faceLandmark68Net.loadFromUri('/models'),
-  fa.nets.faceRecognitionNet.loadFromUri('/models'),
-]).then(() => {
-  everyFrame(async () => onFrame(canvas, video));
-});
-
 vpupload.oninput = onVpUpload;
+alertOnError(main)();
+
+async function main() {
+  await Promise.all([
+    linkWebcam(video),
+    fa.nets.tinyFaceDetector.loadFromUri('/models'),
+    fa.nets.faceLandmark68Net.loadFromUri('/models'),
+    fa.nets.faceRecognitionNet.loadFromUri('/models'),
+  ]);
+  everyFrame(async () => onFrame(canvas, video));
+}
 
 async function linkWebcam(video) {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: {} });
@@ -82,8 +84,8 @@ async function onVpUpload() {
       'the number of faces in the image provided was not 1'
     ).descriptor;
   } catch (e) {
-    console.error(e);
     alert('bad verification. see developer console');
+    throw e;
   }
 }
 

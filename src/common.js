@@ -131,3 +131,16 @@ export function unwrapSingle(array, otherwise = 'expected single element') {
   if (array.length !== 1) throw new Error(otherwise);
   return array[0];
 }
+
+// Attempt to do something async and report the error to the use on failure.
+// This is a function decorator.
+export function alertOnError(cbAsync) {
+  return async () => {
+    try {
+      await cbAsync();
+    } catch (e) {
+      alert(`an error occured, see developer console for more info\n${e}`);
+      throw e;
+    }
+  };
+}
