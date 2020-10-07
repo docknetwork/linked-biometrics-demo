@@ -12,7 +12,7 @@
     "start": "next -p 8000",
     "build": "next build && next export && touch out/.nojekyll",
     "prod": "next start -p 8000",
-    "test": "eslint ."
+    "test": "eslint src"
   },
   "babel": {
     "presets": [

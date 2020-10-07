@@ -1,5 +1,5 @@
 import React from 'react';
-import {createGlobalStyle} from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 import normalize from './normalize';
 import transitions from './transitions';
@@ -12,4 +12,4 @@ export default () => (
     <NormalizeGlobalStyles />
     <TransitionGlobalStyles />
   </>
-)
+);

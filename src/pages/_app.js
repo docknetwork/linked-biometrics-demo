@@ -1,13 +1,13 @@
-import React from 'react'
-import {ThemeProvider} from 'styled-components'
-import Head from 'next/head'
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Head from 'next/head';
 
 import GlobalStyles from '../styles/globals/manifest';
-import fonts from '../styles/fonts.css';
+import '../styles/fonts.css';
 
 const theme = {};
 
-export default function App({Component, pageProps}) {
+export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -20,5 +20,5 @@ export default function App({Component, pageProps}) {
         <Component {...pageProps} />
       </>
     </ThemeProvider>
-  )
+  );
 }

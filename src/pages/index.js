@@ -4,10 +4,11 @@ import { CSSTransition } from 'react-transition-group';
 import dynamic from 'next/dynamic';
 import {useDropzone} from 'react-dropzone';
 
-const Panel = dynamic(() => import('../components/panel'));
-const IssuePanel = dynamic(() => import('../components/issue'));
 import Hand from '../../public/images/hand.svg';
 import Logo from '../../public/images/dock-logo-white.svg';
+
+const Panel = dynamic(() => import('../components/panel'));
+const IssuePanel = dynamic(() => import('../components/issue'));
 
 const Header = styled.div`
   width: 100%;

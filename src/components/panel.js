@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import {useDropzone} from 'react-dropzone';
-import { CSSTransition } from 'react-transition-group';
+import { useDropzone } from 'react-dropzone';
 import * as fa from 'face-api.js';
 
-import { verifyAge } from '../helpers/verify';
-import { unwrapSingle, alertOnError } from '../helpers/common';
+import verifyAge from '../helpers/verify';
+import { unwrapSingle } from '../helpers/common';
 
 import Panel from '../../public/images/panel.svg';
-import Hand from '../../public/images/hand.svg';
 
 const PanelPopupWrapper = styled.div`
   background: rgba(0,0,0,0.5);
@@ -101,7 +99,7 @@ const maxMatchDistance = 0.5;
 function distance(as, bs) {
   // assert(as.length !== undefined, '"distance" recieved a non-array input');
   // assert(as.length === bs.length, 'cant calculate distance beween vectors of different lengths');
-  let sum = as.map((_, i) => Math.pow(as[i] - bs[i], 2)).reduce((a, b) => a + b, 0);
+  const sum = as.map((_, i) => Math.pow(as[i] - bs[i], 2)).reduce((a, b) => a + b, 0);
   return Math.sqrt(sum);
 }
 
@@ -110,7 +108,7 @@ function vsize(video) {
   // return { width: 340, height: 151 };
 }
 function humanReadableComparison(detections, targetFace) {
-if (targetFace === null) return 'Awaiting credential';
+  if (targetFace === null) return 'Awaiting credential';
   if (detections.length === 0) return 'No face found';
   if (detections.length > 1) return 'One person at a time please';
   const dist = distance(detections[0].descriptor, targetFace);
@@ -128,10 +126,10 @@ function isMatch(detections, targetFace) {
 }
 
 async function fetchImage(url) {
-  let res = await fetch(url);
+  const res = await fetch(url);
   if (!res.ok) {
     throw new Error(
-      `failed to fetch: (${res.status}) ${res.statusText}, from url: ${url}`
+      `failed to fetch: (${res.status}) ${res.statusText}, from url: ${url}`,
     );
   }
   const blob = await res.blob();
@@ -141,16 +139,11 @@ async function fetchImage(url) {
   return fa.bufferToImage(blob);
 }
 
-export default function MuhPanel({onClose, onMatch}) {
-  const [showMessage, setShowMessage] = useState(false);
+export default function MuhPanel({ onClose, onMatch }) {
   const [statusText, setStatusText] = useState('Initializing...');
 
-  function handleBuy() {
-    setShowMessage(true);
-  }
-
   async function firstEvent(eventTarget, event) {
-    return await new Promise(resolve => {
+    return await new Promise((resolve) => {
       eventTarget.addEventListener(event, resolve, { once: true });
     });
   }
@@ -169,11 +162,11 @@ export default function MuhPanel({onClose, onMatch}) {
     const canvas = document.getElementById('canvas');
     const video = document.getElementById('video');
     if (canvas && video) {
-      let detections = await detectFaces('video');
+      const detections = await detectFaces('video');
       // console.log('detections', detections)
       fa.matchDimensions(canvas, vsize(video));
       canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-      let rd = fa.resizeResults(detections, vsize(video));
+      const rd = fa.resizeResults(detections, vsize(video));
       fa.draw.drawFaceLandmarks(canvas, rd);
       console.log('ismatch', isMatch(detections, targetFace));
 
@@ -212,35 +205,27 @@ export default function MuhPanel({onClose, onMatch}) {
   }
 
   async function onVpUpload(files) {
-      const blob = unwrapSingle(files);
-
-      let presentaion;
-      try {
-        presentaion = JSON.parse(await blob.text());
-      } catch (e) {
-        throw e;
-      }
-      // displayPresentation(JSON.stringify(presentaion, null, 2));
-      const imageuri = await verifyAge(presentaion);
-      const image = await fetchImage(imageuri);
-      // await displayOtherImage(image);
-      targetFace = unwrapSingle(
-        await detectFaces(image),
-        'the number of faces in the image provided was not 1'
-      ).descriptor;
+    const blob = unwrapSingle(files);
+    const presentaion = JSON.parse(await blob.text());
+    const imageuri = await verifyAge(presentaion);
+    const image = await fetchImage(imageuri);
+    targetFace = unwrapSingle(
+      await detectFaces(image),
+      'the number of faces in the image provided was not 1',
+    ).descriptor;
   }
 
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles) => {
     try {
       onVpUpload(acceptedFiles);
     } catch (e) {
-      console.error('todo: handle this error', e)
+      setStatusText(e.toString());
     }
   }, []);
 
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: 'application/json',
-    onDrop
+    onDrop,
   });
 
   useEffect(() => {
@@ -254,7 +239,7 @@ export default function MuhPanel({onClose, onMatch}) {
 
     return () => {
       // TODO: dispose of video resources
-      console.log('panel unmount')
+      console.log('panel unmount');
     };
   }, []);
 
@@ -274,12 +259,12 @@ export default function MuhPanel({onClose, onMatch}) {
         <Dropzone {...getRootProps()}>
           <input {...getInputProps()} />
           {
-            isDragActive ?
-              <p>Drop the file here...</p> :
-              <p>Drop your VP here<br />or click to upload</p>
+            isDragActive
+              ? <p>Drop the file here...</p>
+              : <p>Drop your VP here<br />or click to upload</p>
           }
         </Dropzone>
       </PanelWrapper>
     </PanelPopupWrapper>
-  )
+  );
 }

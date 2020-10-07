@@ -8,7 +8,7 @@ import axios from 'axios';
 import assert from 'assert';
 import { didcache } from './didcache';
 
-const jsonld_signatures = require('jsonld-signatures');
+const jsonldSignatures = require('jsonld-signatures');
 const jsonld = require('jsonld');
 const { Ed25519KeyPair } = require('crypto-ld');
 const { v4: uuidv4 } = require('uuid');
@@ -78,7 +78,7 @@ export async function createCred(issuer, credentialSubject, ed25519privateKeyBas
 
 async function ed25519suite54(did, privateKeyBase58, publicKeyBase58) {
   const verificationMethod = `${did}#keys-1`;
-  return new jsonld_signatures.suites.Ed25519Signature2018({
+  return new jsonldSignatures.suites.Ed25519Signature2018({
     verificationMethod,
     key: new Ed25519KeyPair({ privateKeyBase58, publicKeyBase58 }),
   });
@@ -118,17 +118,4 @@ export function unwrapSingle(array, otherwise = 'expected single element') {
   );
   if (array.length !== 1) throw new Error(otherwise);
   return array[0];
-}
-
-// Attempt to do something async and report the error to the use on failure.
-// This is a function decorator.
-export function alertOnError(cbAsync) {
-  return async () => {
-    try {
-      await cbAsync();
-    } catch (e) {
-      alert(`an error occured, see developer console for more info\n${e}`);
-      throw e;
-    }
-  };
 }

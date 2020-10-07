@@ -1,5 +1,4 @@
 {
-  "plugins": [],
   "globals": {
     "process": "readonly"
   },
@@ -7,13 +6,18 @@
     "browser": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "airbnb-base", "plugin:react/recommended"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb-base"],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
   "rules": {
     "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
     "class-methods-use-this": "off",
-    "no-return-await": "off",
     "no-plusplus": "off",
     "max-len": "off",
-    "no-console": "off"
+    "react/prop-types": 0,
+    "no-restricted-properties": "off",
+    "react/display-name": "off"
   }
 }

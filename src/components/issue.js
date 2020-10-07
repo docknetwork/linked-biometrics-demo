@@ -1,15 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {useDropzone} from 'react-dropzone';
-import { CSSTransition } from 'react-transition-group';
-import * as fa from 'face-api.js';
 
-import { verifyAge } from '../helpers/verify';
-import { blobToDataUrl, unwrapSingle, alertOnError  } from '../helpers/common';
+import { blobToDataUrl, unwrapSingle } from '../helpers/common';
 import { createAgePresentation } from '../helpers/create-presentation';
 
 import Panel from '../../public/images/panel.svg';
-import Hand from '../../public/images/hand.svg';
 
 const PanelPopupWrapper = styled.div`
   background: rgba(0,0,0,0.5);
@@ -90,9 +85,7 @@ const Dropzone = styled.div`
   font-size: 14px;
   color: #848484;
   text-align: center;
-  flex-direction: column;`
-;
-
+  flex-direction: column;`;
 const WebcamButton = styled.a`
   margin: 10px auto 0 auto;
   background-color: #3898EC;
@@ -108,9 +101,8 @@ const WebcamButton = styled.a`
   }
 `;
 
-export default function IssuePanel({onClose, uploadedImage}) {
+export default function IssuePanel({ onClose, uploadedImage }) {
   const [statusText, setStatusText] = useState('Initializing...');
-  const [canTakePicture, setCanTakePicture] = useState(!uploadedImage);
   const [credential, setCredential] = useState();
   const [imageData, setImageData] = useState();
 
@@ -144,7 +136,7 @@ export default function IssuePanel({onClose, uploadedImage}) {
   async function issueForBlob(blob) {
     setStatusText('Generating...');
     const dataurl = await blobToDataUrl(blob);
-    let pres = await createAgePresentation(dataurl);
+    const pres = await createAgePresentation(dataurl);
     setCredential(pres);
     setStatusText('Credential Created');
   }
@@ -163,14 +155,11 @@ export default function IssuePanel({onClose, uploadedImage}) {
     setImageData(dataurl);
   }
 
-  function initiateDownload(json) {
-  }
-
   function handleDownloadCredential() {
-    var url = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(credential, null, 2));
+    const url = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(credential, null, 2))}`;
     const a = document.createElement('a');
-    a.setAttribute("href", url);
-    a.setAttribute("download", "presentation.json");
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'presentation.json');
     a.click();
   }
 
@@ -185,7 +174,7 @@ export default function IssuePanel({onClose, uploadedImage}) {
 
     return () => {
       // TODO: dispose of video resources
-      console.log('panel unmount')
+      console.log('panel unmount');
     };
   }, []);
 
@@ -214,7 +203,7 @@ export default function IssuePanel({onClose, uploadedImage}) {
           </Dropzone>
         ) : (
           <>
-            {!canTakePicture ? (
+            {uploadedImage ? (
               <Dropzone>
                 Generating credential...
               </Dropzone>
@@ -230,5 +219,5 @@ export default function IssuePanel({onClose, uploadedImage}) {
 
       </PanelWrapper>
     </PanelPopupWrapper>
-  )
+  );
 }
