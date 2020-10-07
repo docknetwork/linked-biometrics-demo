@@ -1,43 +1,31 @@
-
 import {
   EcdsaSepc256k1Signature2019,
   Ed25519Signature2018,
   Sr25519Signature2020,
-} from '@docknetwork/sdk/src/utils/vc/custom_crypto';
+} from '@docknetwork/sdk/utils/vc/custom_crypto';
 import vc from 'vc-js';
 import axios from 'axios';
+import assert from 'assert';
 import { didcache } from './didcache';
+
 const jsonld_signatures = require('jsonld-signatures');
 const jsonld = require('jsonld');
 const { Ed25519KeyPair } = require('crypto-ld');
 const { v4: uuidv4 } = require('uuid');
-import assert from 'assert';
 
 export async function verifyPresentation(presentation) {
-  let v = await vc.verify({
+  const v = await vc.verify({
     presentation,
     suite: [
       new Ed25519Signature2018(),
       new EcdsaSepc256k1Signature2019(),
-      new Sr25519Signature2020()
+      new Sr25519Signature2020(),
     ],
     documentLoader,
     unsignedPresentation: true,
   });
   if (!v.verified) {
     throw v;
-  }
-}
-
-export async function verifyCredential(credential) {
-  let v = await vc.verifyCredential({
-    credential,
-    suite: [new Ed25519Signature2018(), new EcdsaSepc256k1Signature2019(), new Sr25519Signature2020()],
-    documentLoader,
-    checkStatus,
-  });
-  if (!v.verified) {
-    throw v.error;
   }
 }
 
@@ -48,7 +36,7 @@ export async function documentLoader(url) {
   } else if (url.startsWith('did:')) {
     document = await resolveDid(url);
   } else {
-    let resp = await axios.get(url);
+    const resp = await axios.get(url);
     document = resp.data;
   }
   return {
@@ -75,13 +63,13 @@ async function checkStatus() {
 }
 
 export async function createCred(issuer, credentialSubject, ed25519privateKeyBase58, issuerPk58) {
-  let credential = {
-    "@context": ["https://www.w3.org/2018/credentials/v1"],
-    "id": uuid(),
-    "type": ["VerifiableCredential"],
-    "issuer": issuer,
-    "credentialSubject": credentialSubject,
-    "issuanceDate": new Date().toISOString()
+  const credential = {
+    '@context': ['https://www.w3.org/2018/credentials/v1'],
+    id: uuid(),
+    type: ['VerifiableCredential'],
+    issuer,
+    credentialSubject,
+    issuanceDate: new Date().toISOString(),
   };
 
   const suite = await ed25519suite54(issuer, ed25519privateKeyBase58, issuerPk58);
@@ -92,7 +80,7 @@ async function ed25519suite54(did, privateKeyBase58, publicKeyBase58) {
   const verificationMethod = `${did}#keys-1`;
   return new jsonld_signatures.suites.Ed25519Signature2018({
     verificationMethod,
-    key: new Ed25519KeyPair({ privateKeyBase58, publicKeyBase58 })
+    key: new Ed25519KeyPair({ privateKeyBase58, publicKeyBase58 }),
   });
 }
 
@@ -116,8 +104,8 @@ export async function expand(ld) {
 // example way to get a blob
 // let blob = await fetch("https://example.com/image.png").then(r => r.blob());
 export async function blobToDataUrl(blob) {
-  return await new Promise(resolve => {
-    let reader = new FileReader();
+  return await new Promise((resolve) => {
+    const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
     reader.readAsDataURL(blob);
   });
@@ -126,7 +114,7 @@ export async function blobToDataUrl(blob) {
 export function unwrapSingle(array, otherwise = 'expected single element') {
   assert(
     array.length !== undefined,
-    'tried to unwrap single element from an array, but the array was not an array'
+    'tried to unwrap single element from an array, but the array was not an array',
   );
   if (array.length !== 1) throw new Error(otherwise);
   return array[0];

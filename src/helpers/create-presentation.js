@@ -1,11 +1,8 @@
-// Assemble a presentation out of credentials env['Issuer'] using env['IssuerSk'] proving that
-// env['ImageUri'] is a picture of someone who is "OldEnough"
+import { createCred, createPres, expand } from './common';
+import { ageRoot, delegate1, delegate2 } from './didcache';
+import rules from './rules';
 
-import { createCred, createPres, expand } from '../common';
-import { ageRoot, delegate1, delegate2 } from '../didcache';
-import rules from '../rules';
-
-const clde = import('@docknetwork/sdk/src/utils/cd');
+const clde = import('@docknetwork/sdk/utils/cd');
 
 export async function createAgePresentation(imageUri) {
   const creds = await Promise.all([

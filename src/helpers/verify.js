@@ -4,7 +4,7 @@ import rules from './rules';
 import deepEq from 'deep-equal';
 
 // clde is a promise to the claim deduction module
-const clde = import('@docknetwork/sdk/src/utils/cd');
+const clde = import('@docknetwork/sdk/utils/cd');
 
 const type = { Iri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' };
 const ofAge = { Iri: 'https://example.com/OfAge' };

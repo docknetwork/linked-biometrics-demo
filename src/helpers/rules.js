@@ -1,4 +1,3 @@
-
 import { ageRoot as AR } from './didcache';
 
 const ageroot = { Bound: { Iri: AR.did } };
