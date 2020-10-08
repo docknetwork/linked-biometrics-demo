@@ -218,6 +218,10 @@ export default () => {
               Ut ultricies lacus ut fringilla rhoncus. Nulla consequat sapien purus, sit amet tincidunt urna condimentum porta.
               Aenean elementum, dolor et consectetur posuere, orci lectus fermentum urna, vel pulvinar mi mi accumsan justo.
             </p>
+            <br />
+            <center>
+              <a href="https://www.vecteezy.com/free-vector/icons" target="_blank">Icons Vectors by Vecteezy</a>
+            </center>
           </RightContent>
 
           <RightContent>
