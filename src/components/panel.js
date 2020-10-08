@@ -92,8 +92,6 @@ const Dropzone = styled.div`
   text-align: center;
 `;
 
-let targetFace = null; // this will hold the face descriptor the user needs to match
-
 const maxMatchDistance = 0.5;
 // return the euclian distance between two arrays
 function distance(as, bs) {
@@ -108,7 +106,7 @@ function vsize(video) {
   // return { width: 340, height: 151 };
 }
 function humanReadableComparison(detections, targetFace) {
-  if (targetFace === null) return 'Awaiting credential';
+  if (!targetFace) return 'Awaiting credential';
   if (detections.length === 0) return 'No face found';
   if (detections.length > 1) return 'One person at a time please';
   const dist = distance(detections[0].descriptor, targetFace);
@@ -118,7 +116,7 @@ function humanReadableComparison(detections, targetFace) {
 
 function isMatch(detections, targetFace) {
   // this logic is a repeat of that in humanReadableComparison
-  if (targetFace === null) return false;
+  if (!targetFace) return false;
   if (detections.length === 0) return false;
   if (detections.length > 1) return false;
   const dist = distance(detections[0].descriptor, targetFace);
@@ -139,7 +137,9 @@ async function fetchImage(url) {
   return fa.bufferToImage(blob);
 }
 
-export default function MuhPanel({ onClose, onMatch }) {
+let targetFace = null;
+
+export default function DetectPanel({ onClose, onMatch }) {
   const [statusText, setStatusText] = useState('Initializing...');
 
   async function firstEvent(eventTarget, event) {
@@ -163,23 +163,21 @@ export default function MuhPanel({ onClose, onMatch }) {
     const video = document.getElementById('video');
     if (canvas && video) {
       const detections = await detectFaces('video');
-      // console.log('detections', detections)
       fa.matchDimensions(canvas, vsize(video));
       canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
       const rd = fa.resizeResults(detections, vsize(video));
       fa.draw.drawFaceLandmarks(canvas, rd);
-      console.log('ismatch', isMatch(detections, targetFace));
-
-      const comparison = humanReadableComparison(detections, targetFace);
-      if (comparison !== statusText) {
-        setStatusText(comparison);
-      }
 
       if (isMatch(detections, targetFace)) {
         setTimeout(() => {
           onClose();
           onMatch();
         }, 1000);
+      }
+
+      const comparison = humanReadableComparison(detections, targetFace);
+      if (comparison !== statusText) {
+        setStatusText(comparison);
       }
     }
   }
@@ -229,6 +227,7 @@ export default function MuhPanel({ onClose, onMatch }) {
   });
 
   useEffect(() => {
+    targetFace = null;
     setTimeout(async () => {
       try {
         await main();
@@ -239,7 +238,6 @@ export default function MuhPanel({ onClose, onMatch }) {
 
     return () => {
       // TODO: dispose of video resources
-      console.log('panel unmount');
     };
   }, []);
 

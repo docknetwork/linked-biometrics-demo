@@ -58,10 +58,6 @@ function demoDid(did) {
   return didcache[did];
 }
 
-async function checkStatus() {
-  return { verified: true };
-}
-
 export async function createCred(issuer, credentialSubject, ed25519privateKeyBase58, issuerPk58) {
   const credential = {
     '@context': ['https://www.w3.org/2018/credentials/v1'],

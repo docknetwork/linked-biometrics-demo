@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { blobToDataUrl, unwrapSingle } from '../helpers/common';
-import { createAgePresentation } from '../helpers/create-presentation';
+import createAgePresentation from '../helpers/create-presentation';
 
 import Panel from '../../public/images/panel.svg';
 
@@ -174,7 +174,6 @@ export default function IssuePanel({ onClose, uploadedImage }) {
 
     return () => {
       // TODO: dispose of video resources
-      console.log('panel unmount');
     };
   }, []);
 

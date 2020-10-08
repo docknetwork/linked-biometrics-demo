@@ -26,22 +26,22 @@ const StyledLogo = styled(Logo)`
 `;
 
 const VendingMachineWrapper = styled.div`
-  margin-left: 60px;
+  position: fixed;
+  left: 40px;
   height: 100%;
-  position: relative;
 `;
 
 const VendingMachineStyled = styled.img`
   height: 100%;
-  position: fixed;
-  left: 40px;
+  position: relative;
+  left: 0;
   top: 0;
 `;
 
 const VendingMachineCan = styled.img`
   height: 100%;
   position: absolute;
-  left: 0;
+  left: 10px;
   bottom: 0;
   z-index: 1;
   animation: canReveal 1s;

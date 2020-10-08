@@ -18,6 +18,8 @@
     "max-len": "off",
     "react/prop-types": 0,
     "no-restricted-properties": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "no-restricted-syntax": "off",
+    "no-return-await": "off"
   }
 }
