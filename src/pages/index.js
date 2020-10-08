@@ -100,6 +100,7 @@ const RightContent = styled.div`
   margin-bottom: 30px;
   box-sizing: border-box;
   box-shadow: 14px 14px 60px -20px rgba(0, 0, 0, 0.25);
+  text-align: left;
 
   &:last-child {
     margin-bottom: 0;
@@ -111,7 +112,6 @@ const RightContent = styled.div`
     font-size: 32px;
     line-height: 36px;
     font-weight: 700;
-    text-align: center;
     margin: 0 0 10px 0;
   }
 
