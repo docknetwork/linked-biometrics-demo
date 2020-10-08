@@ -1,6 +1,6 @@
-# Linked Biometrics Claim Deducation demo
+# Linked Biometrics Claim Deduction demo
 
-A simple demonstration of using linked biometrics with Claim Deducation and Verifiable Credentials.
+A simple demonstration of using linked biometrics with Claim Deduction and Verifiable Credentials.
 
 **Uses:**
 
