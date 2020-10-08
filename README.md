@@ -1,9 +1,11 @@
-# Next.js + styled-components boilerplate
+# Linked Biometrics Claim Deducation demo
 
-Boilerplate for a Next.js + styled-components website.
+A simple demonstration of using linked biometrics with Claim Deducation and Verifiable Credentials.
 
 **Uses:**
 
+- [Dock SDK](https://github.com/docknetwork/sdk)
+- [RIFY](https://github.com/docknetwork/rify)
 - [Next.js](https://nextjs.org/)
 - [styled-components](https://styled-components.com/)
 - [ESLint](https://eslint.org/)
@@ -13,7 +15,4 @@ Boilerplate for a Next.js + styled-components website.
 **Features:**
 
 - Light and dark theme, customizable with CSS variables
-- Lightweight reset
-- Border-box by default
-- Typographic rhythm (10px by default), through `em` and `rem` units for consistent and adjustable spacings (`rem`) and font-sizes (`em`)
-- Body and heading font options
+- Based on Next.js + styled-components boilerplate
