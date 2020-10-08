@@ -119,7 +119,7 @@ const RightContent = styled.div`
     font-size: 18px;
     line-height: 24px;
     font-weight: 400;
-    margin: 0;
+    margin: 0 0 10px 0;
   }
 `;
 
@@ -211,16 +211,23 @@ export default () => {
 
         <RightContentWrapper>
           <RightContent>
-            <h1>What is this demo?</h1>
+            <h1>Dock Claim Deduction demo</h1>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porttitor nunc sit amet lacus bibendum hendrerit.
-              In porta tempor semper. Nunc ac mauris consectetur, lacinia est semper, mollis tellus.
-              Ut ultricies lacus ut fringilla rhoncus. Nulla consequat sapien purus, sit amet tincidunt urna condimentum porta.
-              Aenean elementum, dolor et consectetur posuere, orci lectus fermentum urna, vel pulvinar mi mi accumsan justo.
+              This demo is an example of how claim deduction, facial recognition and verifiable credentials can be used to cryptographically verify a subject's age for the purchase of restricted beverages, removing the need for a human "in the loop".
             </p>
-            <br />
+            <p>
+              This virtual vending machine takes a verifiable presentation, which contains an image of the subject’s face. When the VP is uploaded, the vending machine will use your device’s camera to verify that you are the person that the presentation was issued to.
+            </p>
+            <p>
+              To try for yourself, issue your own credential below and download it. Next, click the “Buy” button in the bottom left corner and upload your presentation when ready. If your face matches the picture in your credential, the machine will dispense a drink!
+            </p>
+            <p>
+              You can read more about the technical details of this demo in the <a href="https://github.com/docknetwork/linked-biometrics-demo">GitHub repository</a>.
+            </p>
             <center>
-              <a href="https://www.vecteezy.com/free-vector/icons" target="_blank">Icons Vectors by Vecteezy</a>
+              <a href="https://www.vecteezy.com/free-vector/icons" target="_blank">
+                Icons Vectors by Vecteezy
+              </a>
             </center>
           </RightContent>
 
@@ -229,6 +236,7 @@ export default () => {
             <p>
               This demo will accept credentials issued by you as the private key is stored on this page.
               Upload or take a clear picture of yourself to download your own credential for verification.
+              Once downloaded, click the “Buy” button to test the demo.
             </p>
             <Dropzone {...getRootProps()}>
               <input {...getInputProps()} />
