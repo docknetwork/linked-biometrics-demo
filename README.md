@@ -1,6 +1,6 @@
 # Linked Biometrics Claim Deduction demo
 
-A simple demonstration of using linked biometrics with Claim Deduction and Verifiable Credentials.
+A simple demonstration of using linked biometrics with Claim Deduction and Verifiable Credentials. View the demo [here](https://biometrics-demo.dock.io/): https://biometrics-demo.dock.io/
 
 **Uses:**
 
