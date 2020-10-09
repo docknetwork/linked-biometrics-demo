@@ -219,7 +219,7 @@ export default () => {
           <RightContent>
             <h1>Dock Claim Deduction Demo</h1>
             <p>
-              This demo is an example of how claim deduction, facial recognition and verifiable credentials can be used to cryptographically verify a subjects age for the purchase of purchase of age restricted items, removing the need for a human "in the loop".
+              This demo is an example of how claim deduction, facial recognition and verifiable credentials can be used to cryptographically verify a subjects age for the purchase of age restricted items, removing the need for a human "in the loop".
             </p>
             <p>
               This virtual vending machine takes a verifiable presentation, which contains an image of the subject’s face. When the VP is uploaded, the vending machine will use your device’s camera to verify that you are the person referred to by the credential.
