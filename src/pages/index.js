@@ -154,6 +154,11 @@ const WebcamButton = styled.a`
   }
 `;
 
+const AttributionLink = styled.a`
+  font-size: 12px;
+  color: #949494;
+`;
+
 export default () => {
   const [showMessage, setShowMessage] = useState(false);
   const [isMatch, setIsMatch] = useState(false);
@@ -226,9 +231,9 @@ export default () => {
               You can read more about the technical details of this demo in the <a href="https://github.com/docknetwork/linked-biometrics-demo">GitHub repository</a>.
             </p>
             <center>
-              <a href="https://www.vecteezy.com/free-vector/icons" target="_blank">
+              <AttributionLink href="https://www.vecteezy.com/free-vector/icons" target="_blank">
                 Icons Vectors by Vecteezy
-              </a>
+              </AttributionLink>
             </center>
           </RightContent>
 

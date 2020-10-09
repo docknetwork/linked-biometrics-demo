@@ -47,7 +47,8 @@ const VideoWrapper = styled.div`
 
   &,
   > canvas,
-  > video {
+  > video,
+  > img {
     width: 340px!important;
     height: 151px!important;
     object-fit: cover;
@@ -85,7 +86,9 @@ const Dropzone = styled.div`
   font-size: 14px;
   color: #848484;
   text-align: center;
-  flex-direction: column;`;
+  flex-direction: column;
+`;
+
 const WebcamButton = styled.a`
   margin: 10px auto 0 auto;
   background-color: #3898EC;
@@ -161,6 +164,7 @@ export default function IssuePanel({ onClose, uploadedImage }) {
     a.setAttribute('href', url);
     a.setAttribute('download', 'presentation.json');
     a.click();
+    onClose();
   }
 
   useEffect(() => {
@@ -195,9 +199,9 @@ export default function IssuePanel({ onClose, uploadedImage }) {
 
         {credential ? (
           <Dropzone>
-            Credential generated!
+            Download your credential,<br />click buy and upload it!
             <WebcamButton onClick={handleDownloadCredential}>
-              Download
+              Download credential
             </WebcamButton>
           </Dropzone>
         ) : (
