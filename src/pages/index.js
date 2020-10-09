@@ -28,6 +28,7 @@ const StyledLogo = styled(Logo)`
 const VendingMachineWrapper = styled.div`
   position: fixed;
   left: 40px;
+  top: 0;
   height: 100%;
 `;
 
