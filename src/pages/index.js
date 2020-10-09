@@ -211,7 +211,7 @@ export default () => {
 
         <RightContentWrapper>
           <RightContent>
-            <h1>Dock Claim Deduction demo</h1>
+            <h1>Dock Claim Deduction Demo</h1>
             <p>
               This demo is an example of how claim deduction, facial recognition and verifiable credentials can be used to cryptographically verify a subjects age for the purchase of purchase of age restricted items, removing the need for a human "in the loop".
             </p>
