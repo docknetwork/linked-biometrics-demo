@@ -1,18 +1,19 @@
 # Linked Biometrics Claim Deduction demo
 
-A simple demonstration of using linked biometrics with Claim Deduction and Verifiable Credentials for age verification. View the demo [here](https://biometrics-demo.dock.io). The demo is a simulated vending machine that performs age verification before dispensing items.
+A simple demonstration using linked biometrics with Claim Deduction and Verifiable Credentials for age verification. The demo is a simulated vending machine that performs age verification before dispensing items. Try it yourself [here](https://biometrics-demo.dock.io).
 
 **Uses:**
 
 - [Dock SDK](https://github.com/docknetwork/sdk)
 - [RIFY](https://github.com/docknetwork/rify)
 - [Face Api](https://github.com/justadudewhohacks/face-api.js/)
-- [Next.js](https://nextjs.org/)
 - [VCDM](https://www.w3.org/TR/vc-data-model)
 
 This age verification method can be partially privacy preserving because biometric data is embedded in a signed credential rather than being stored in some central database. The person getting their age verified doesn't *need* to reveal much personally identifiable information to the verifier other than their face and the fact that they are older than a certain threshold. The credential can leave out data points like name and gender.
 
 This demo implements and uses a local [DID method](https://www.w3.org/TR/did-core/#dfn-did-methods) called "did:demo". The vending machine trusts age claims made by `did:demo:age_root`. The "secret" key for that DID is in `./src/helpers/didcache.js`. Feel free to experiment with issuing your own credentials.
+
+Credentials in this demo are irrevocable but could in practice [link](https://www.w3.org/TR/vc-data-model/#status) to a revocation registry. 
 
 The vending machine accepts credential presentations and verifies them against the face it sees in its camera before dispensing an item.
 
@@ -43,7 +44,109 @@ therefore [did:demo:delegate2 type AgeDelegate]
 therefore [<image> type OfAge]
 ```
 
-The vending machine in this demo lays the burden of proof on the presenter, but it's possible to perform inference *without* requiring an embedded proof. As intuition would yield, inference is computationally harder than proof verification.
+The vending machine in this demo lays the burden of proof on the presenter, but it's possible to perform inference *without* requiring an embedded proof. As intuition would indicate, inference is computationally harder than proof verification.
+
+# Presentation Example
+
+The following is an example of a VCDM presentation emitted and accepted by this demo. Base 64 embedded images are hidden for readability.
+
+```json
+{
+  "@context": ["https://www.w3.org/2018/credentials/v1"],
+  "type": ["VerifiablePresentation"],
+  "verifiableCredential": [
+    {
+      "@context": ["https://www.w3.org/2018/credentials/v1"],
+      "id": "uuid:67d8a4f9-61b7-4f98-a830-e7fef6fd274f",
+      "type": ["VerifiableCredential"],
+      "issuer": "did:demo:age_root",
+      "credentialSubject": {
+        "@id": "did:demo:delegate1",
+        "@type": "https://example.com/AgeDelegate"
+      },
+      "issuanceDate": "2020-10-12T23:59:06.320Z",
+      "proof": {
+        "type": "Ed25519Signature2018",
+        "created": "2020-10-12T23:59:06Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GjaPOrG-ca50NfE7zmx0Ff5jd2TaaNabCkh47gVj3lbYTxe5EkyIVP49BuAu9JNM1K5xB1V6XaH0lPBCkARfBw",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:demo:age_root#keys-1"
+      }
+    },
+    {
+      "@context": ["https://www.w3.org/2018/credentials/v1"],
+      "id": "uuid:0f1da9fc-54d8-483c-ab32-8031ba380bd2",
+      "type": ["VerifiableCredential"],
+      "issuer": "did:demo:delegate1",
+      "credentialSubject": {
+        "@id": "did:demo:delegate2",
+        "@type": "https://example.com/AgeDelegate"
+      },
+      "issuanceDate": "2020-10-12T23:59:06.321Z",
+      "proof": {
+        "type": "Ed25519Signature2018",
+        "created": "2020-10-12T23:59:06Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..sHGEIviELWLemtuc4n0rIXS9z90j3h8_N3Css3357y-bFZtzcPyagt7T8UHnVtminj4GZdxZTKp_GRnfMBHrAA",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:demo:delegate1#keys-1"
+      }
+    },
+    {
+      "@context": ["https://www.w3.org/2018/credentials/v1"],
+      "id": "uuid:d8b2328b-ccf4-4bc9-b5e3-62c8ae58f13d",
+      "type": ["VerifiableCredential"],
+      "issuer": "did:demo:delegate2",
+      "credentialSubject": {
+        "@id": "data:image/png;base64,iVBORw0KG...etc...",
+        "@type": "https://example.com/OfAge"
+      },
+      "issuanceDate": "2020-10-12T23:59:06.322Z",
+      "proof": {
+        "type": "Ed25519Signature2018",
+        "created": "2020-10-12T23:59:06Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..B8UjkhNXO5U-YWNxHZi-iJRoOIvEhfbESwzlGeDrd1ysuKwtb6eIptdrVJ675LdFkT4WNeCSsHzuTiKGMsnBDw",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:demo:delegate2#keys-1"
+      }
+    }
+  ],
+  "id": "uuid:71d67df1-419d-4382-af5e-5f240c9effec",
+  "holder": "uuid:e5dac0a1-06ec-4721-94ce-8dd0f3b3d821",
+  "https://www.dock.io/rdf2020#logicV1": {
+    "@type": "@json",
+    "@value": [
+      {
+        "rule_index": 0,
+        "instantiations": []
+      },
+      {
+        "rule_index": 1,
+        "instantiations": [
+		  {"Iri": "did:demo:age_root"},
+		  {"Blank": "_:b0"},
+		  {"Iri": "did:demo:delegate1"}
+        ]
+      },
+      {
+        "rule_index": 1,
+        "instantiations": [
+		  {"Iri": "did:demo:delegate1"},
+          {"Blank": "_:b5"},
+          {"Iri": "did:demo:delegate2"}
+        ]
+      },
+      {
+        "rule_index": 2,
+        "instantiations": [
+          {"Iri": "did:demo:delegate2"},
+          {"Blank": "_:b10"},
+          {"Iri": "data:image/png;base64,iVBORw0KG...etc..."}
+        ]
+      }
+    ]
+  }
+}
+```
 
 # Considerations
 
