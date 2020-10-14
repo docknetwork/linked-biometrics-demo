@@ -19,7 +19,7 @@ The vending machine accepts credential presentations and verifies them against t
 
 # Delegation Chains
 
-In real large-scale use, it may not be efficient for a single entity to issue every age credential. As a proposed solution, and as an excuse to show off [Dock's Claim Deduction](https://docknetwork.github.io/sdk/tutorials/concepts_claim_deduction.html engine), this demo allows for delegation of authority by issuers.
+In real large-scale use, it may not be efficient for a single entity to issue every age credential. As a proposed solution, and as an excuse to show off [Dock's Claim Deduction engine](https://docknetwork.github.io/sdk/tutorials/concepts_claim_deduction.html), this demo allows for delegation of authority by issuers.
 
 Dock credentials are modeled as RDF which gives them meaning in the context of the semantic web. It's possible for a computer perform deductive reasoning over RDF graphs. Using Claim Deduction, the vending machine can perform limited generic deductive reasoning given a set of allowed logical axioms. Check out `src/helpers/rules.js` to see the axioms accepted by the vending machine.
 
