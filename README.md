@@ -122,15 +122,15 @@ The following is an example of a VCDM presentation emitted and accepted by this 
       {
         "rule_index": 1,
         "instantiations": [
-		  {"Iri": "did:demo:age_root"},
-		  {"Blank": "_:b0"},
-		  {"Iri": "did:demo:delegate1"}
+          {"Iri": "did:demo:age_root"},
+          {"Blank": "_:b0"},
+          {"Iri": "did:demo:delegate1"}
         ]
       },
       {
         "rule_index": 1,
         "instantiations": [
-		  {"Iri": "did:demo:delegate1"},
+          {"Iri": "did:demo:delegate1"},
           {"Blank": "_:b5"},
           {"Iri": "did:demo:delegate2"}
         ]
