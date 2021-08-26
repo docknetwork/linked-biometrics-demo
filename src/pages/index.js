@@ -89,6 +89,13 @@ const RightContentWrapper = styled.div`
   z-index: 10;
   margin-top: 40px;
   margin-bottom: 40px;
+
+  @media screen and (max-width: 800px) {
+    max-width: 100%;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 320px;
+  }
 `;
 
 const RightContent = styled.div`
