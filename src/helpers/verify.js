@@ -1,5 +1,4 @@
 import deepEq from 'deep-equal';
-import { acceptCompositeClaims } from '@docknetwork/sdk/utils/cd';
 import { verifyPresentation, expand } from './common';
 import rules from './rules';
 
@@ -13,6 +12,8 @@ const ofAge = { Iri: 'https://example.com/OfAge' };
 export default async function verifyAge(presentation) {
   // Verify presentation.
   await verifyPresentation(presentation);
+
+  const { acceptCompositeClaims } = await import('@docknetwork/sdk/utils/cd');
 
   // Get list of claims from presentation.
   const ep = await expand(presentation);

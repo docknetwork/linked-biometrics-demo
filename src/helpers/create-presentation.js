@@ -1,9 +1,9 @@
-import { proveCompositeClaims } from '@docknetwork/sdk/utils/cd';
 import { createCred, createPres, expand } from './common';
 import { ageRoot, delegate1, delegate2 } from './didcache';
 import rules from './rules';
 
 export default async function createAgePresentation(imageUri) {
+  const { proveCompositeClaims } = await import('@docknetwork/sdk/utils/cd');
   const creds = await Promise.all([
     issueDelegation({
       issuer: ageRoot.did,
@@ -25,6 +25,7 @@ export default async function createAgePresentation(imageUri) {
     }),
   ]);
   const pres = await createPres(creds);
+  console.log('pres', pres)
   const expPres = await expand(pres);
   const toProve = [
     { Iri: imageUri },

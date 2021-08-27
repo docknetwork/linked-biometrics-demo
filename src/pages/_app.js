@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import Head from 'next/head';
 
@@ -8,6 +8,10 @@ import '../styles/fonts.css';
 const theme = {};
 
 export default function App({ Component, pageProps }) {
+  useEffect(() => {
+    window.global = window;
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <>
