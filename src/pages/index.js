@@ -166,7 +166,7 @@ const AttributionLink = styled.a`
   color: #949494;
 `;
 
-export default () => {
+export default function IndexPage() {
   const [showMessage, setShowMessage] = useState(false);
   const [isMatch, setIsMatch] = useState(false);
   const [showCan, setShowCan] = useState(false);
