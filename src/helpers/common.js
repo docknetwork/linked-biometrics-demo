@@ -3,17 +3,13 @@ import {
   Ed25519Signature2018,
   Sr25519Signature2020,
 } from '@docknetwork/sdk/utils/vc/custom_crypto';
+
 import { verifyPresentation as verifyPresentationDock } from '@docknetwork/sdk/utils/vc/presentations';
 import { issueCredential } from '@docknetwork/sdk/utils/vc/credentials';
 import VerifiablePresentation from '@docknetwork/sdk/verifiable-presentation';
 
 import defaultDocumentLoader from '@docknetwork/sdk/utils/vc/document-loader';
-// import {
-//   Ed25519VerificationKey2018,
-// } from "@transmute/ed25519-signature-2018";
-
 import {Ed25519VerificationKey2018} from '@digitalbazaar/ed25519-verification-key-2018';
-
 
 import axios from 'axios';
 import assert from 'assert';
