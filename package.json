@@ -74,26 +74,30 @@
     "bracketSpacing": false,
     "trailingComma": "always"
   },
+  "resolutions": {
+    "jsonld": "3.2.0",
+    "jsonld-signatures": "https://github.com/docknetwork/jsonld-signatures"
+  },
   "dependencies": {
-    "jsonld": "^2.0.2",
-    "@docknetwork/sdk": "^0.3.5",
+    "@digitalbazaar/ed25519-verification-key-2018": "^3.1.1",
+    "@docknetwork/sdk": "0.3.9",
     "@sindresorhus/is": "^2.1.0",
     "@svgr/webpack": "^5.4.0",
+    "@transmute/credentials-context": "^0.7.0-unstable.7",
     "axios": "^0.20.0",
     "crypto-ld": "^3.9.0",
     "deep-equal": "^2.0.3",
     "face-api.js": "^0.22.2",
-    "jsonld-signatures": "^6.0.0",
-    "next": "^9.3.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "next": "^11.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-dropzone": "^11.2.0",
     "react-transition-group": "^4.4.1",
     "styled-components": "^5.0.1",
-    "uuid": "^8.3.1",
-    "vc-js": "^0.6.4"
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "babel-plugin-styled-components": "^1.10.7",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.2.0",

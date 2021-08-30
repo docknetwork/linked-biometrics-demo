@@ -1,9 +1,9 @@
-import { proveCompositeClaims } from '@docknetwork/sdk/utils/cd';
 import { createCred, createPres, expand } from './common';
 import { ageRoot, delegate1, delegate2 } from './didcache';
 import rules from './rules';
 
 export default async function createAgePresentation(imageUri) {
+  const { proveCompositeClaims } = await import('@docknetwork/sdk/utils/cd');
   const creds = await Promise.all([
     issueDelegation({
       issuer: ageRoot.did,
@@ -30,6 +30,7 @@ export default async function createAgePresentation(imageUri) {
     { Iri: imageUri },
     { Iri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' },
     { Iri: 'https://example.com/OfAge' },
+    // { DefaultGraph: true },
   ];
   const proof = await proveCompositeClaims(expPres, [toProve], rules);
   pres['https://www.dock.io/rdf2020#logicV1'] = proof;

@@ -3,25 +3,30 @@ import {
   Ed25519Signature2018,
   Sr25519Signature2020,
 } from '@docknetwork/sdk/utils/vc/custom_crypto';
-import vc from 'vc-js';
+
+import { verifyPresentation as verifyPresentationDock } from '@docknetwork/sdk/utils/vc/presentations';
+import { issueCredential } from '@docknetwork/sdk/utils/vc/credentials';
+import VerifiablePresentation from '@docknetwork/sdk/verifiable-presentation';
+
+import defaultDocumentLoader from '@docknetwork/sdk/utils/vc/document-loader';
+import {Ed25519VerificationKey2018} from '@digitalbazaar/ed25519-verification-key-2018';
+
 import axios from 'axios';
 import assert from 'assert';
 import { didcache } from './didcache';
 
-const jsonldSignatures = require('jsonld-signatures');
-const jsonld = require('jsonld');
-const { Ed25519KeyPair } = require('crypto-ld');
-const { v4: uuidv4 } = require('uuid');
+import jsonldSignatures from 'jsonld-signatures';
+import jsonld from 'jsonld';
+import { Ed25519KeyPair } from 'crypto-ld';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function verifyPresentation(presentation) {
-  const v = await vc.verify({
-    presentation,
-    suite: [
-      new Ed25519Signature2018(),
-      new EcdsaSepc256k1Signature2019(),
-      new Sr25519Signature2020(),
-    ],
+  const v = await verifyPresentationDock(presentation, {
+    challenge: undefined,
+    domain: undefined,
     documentLoader,
+    compactProof: true,
+    forceRevocationCheck: false,
     unsignedPresentation: true,
   });
   if (!v.verified) {
@@ -29,26 +34,18 @@ export async function verifyPresentation(presentation) {
   }
 }
 
+const documentLoaderDefault = defaultDocumentLoader(null);
 export async function documentLoader(url) {
   let document;
   if (url.startsWith('did:demo:')) {
     document = demoDid(url);
-  } else if (url.startsWith('did:')) {
-    document = await resolveDid(url);
   } else {
-    const resp = await axios.get(url);
-    document = resp.data;
+    document = (await documentLoaderDefault(url)).document;
   }
   return {
     documentUrl: url,
     document,
   };
-}
-
-async function resolveDid(did) {
-  const encodedDid = encodeURIComponent(did);
-  const resp = await axios.get(`https://resolver.identity.foundation/1.0/identifiers/${encodedDid}`);
-  return resp.data.didDocument;
 }
 
 function demoDid(did) {
@@ -61,7 +58,7 @@ function demoDid(did) {
 export async function createCred(issuer, credentialSubject, ed25519privateKeyBase58, issuerPk58) {
   const credential = {
     '@context': ['https://www.w3.org/2018/credentials/v1'],
-    id: uuid(),
+    id: generateUUID(),
     type: ['VerifiableCredential'],
     issuer,
     credentialSubject,
@@ -69,28 +66,43 @@ export async function createCred(issuer, credentialSubject, ed25519privateKeyBas
   };
 
   const suite = await ed25519suite54(issuer, ed25519privateKeyBase58, issuerPk58);
-  return await vc.issue({ credential, suite });
+  const documentLoader = null;
+  const vc = await issueCredential(suite, credential, true, documentLoader);
+  return vc;
 }
 
 async function ed25519suite54(did, privateKeyBase58, publicKeyBase58) {
   const verificationMethod = `${did}#keys-1`;
-  return new jsonldSignatures.suites.Ed25519Signature2018({
-    verificationMethod,
-    key: new Ed25519KeyPair({ privateKeyBase58, publicKeyBase58 }),
+  const keypair = await Ed25519VerificationKey2018.from({
+    controller: did,
+    id: verificationMethod,
+    type: 'Ed25519VerificationKey2018',
+    privateKeyBase58,
+    publicKeyBase58,
   });
+  const suite = new Ed25519Signature2018({
+    verificationMethod,
+    keypair: {
+      sign: async function(data) {
+        const signed = await keypair.signer().sign({ data });
+        return signed;
+      }
+    },
+    signer: keypair.signer(),
+  });
+  suite.verificationMethod = verificationMethod;
+  return suite;
 }
 
-function uuid() {
+function generateUUID() {
   return `uuid:${uuidv4()}`;
 }
 
 export async function createPres(credentials) {
-  return await vc.createPresentation({
-    verifiableCredential: credentials,
-    id: uuid(),
-    holder: uuid(),
-    documentLoader,
-  });
+  const vp = new VerifiablePresentation(generateUUID());
+  credentials.forEach(cred => vp.addCredential(cred));
+  vp.setHolder(generateUUID());
+  return vp.toJSON();
 }
 
 export async function expand(ld) {

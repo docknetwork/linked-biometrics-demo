@@ -7,9 +7,11 @@ import transitions from './transitions';
 const NormalizeGlobalStyles = createGlobalStyle`${normalize}`;
 const TransitionGlobalStyles = createGlobalStyle`${transitions}`;
 
-export default () => (
-  <>
-    <NormalizeGlobalStyles />
-    <TransitionGlobalStyles />
-  </>
-);
+export default function Styles() {
+  return (
+    <>
+      <NormalizeGlobalStyles />
+      <TransitionGlobalStyles />
+    </>
+  );
+}
