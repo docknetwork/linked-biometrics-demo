@@ -4,7 +4,7 @@ module.exports = {
     config.experiments = {
       syncWebAssembly: true,
   	};
-    config.resolve.fallback = { fs: false, crypto: false };
+    config.resolve.fallback = { fs: false, crypto: false, stream: false };
 
 
     config.module.rules.push({

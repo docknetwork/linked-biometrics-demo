@@ -3,15 +3,17 @@ import {
   Ed25519Signature2018,
   Sr25519Signature2020,
 } from '@docknetwork/sdk/utils/vc/custom_crypto';
-// import * as rify from 'rify/index_bundle.js';
-const rify = null;
 import { verifyPresentation as verifyPresentationDock } from '@docknetwork/sdk/utils/vc/presentations';
 import { issueCredential } from '@docknetwork/sdk/utils/vc/credentials';
 import VerifiablePresentation from '@docknetwork/sdk/verifiable-presentation';
 
-import {
-  Ed25519VerificationKey2018,
-} from "@transmute/ed25519-signature-2018";
+import defaultDocumentLoader from '@docknetwork/sdk/utils/vc/document-loader';
+// import {
+//   Ed25519VerificationKey2018,
+// } from "@transmute/ed25519-signature-2018";
+
+import {Ed25519VerificationKey2018} from '@digitalbazaar/ed25519-verification-key-2018';
+
 
 import axios from 'axios';
 import assert from 'assert';
@@ -19,7 +21,6 @@ import { didcache } from './didcache';
 
 import jsonldSignatures from 'jsonld-signatures';
 import jsonld from 'jsonld';
-// import rify, { prove as rifyProve } from 'rify';
 import { Ed25519KeyPair } from 'crypto-ld';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -30,44 +31,25 @@ export async function verifyPresentation(presentation) {
     documentLoader,
     compactProof: true,
     forceRevocationCheck: false,
+    unsignedPresentation: true,
   });
-  console.log('vpResult', v)
-
-  // const v = await vc.verify({
-  //   presentation,
-  //   suite: [
-  //     new Ed25519Signature2018(),
-  //     new EcdsaSepc256k1Signature2019(),
-  //     new Sr25519Signature2020(),
-  //   ],
-  //   documentLoader,
-  //   unsignedPresentation: true,
-  // });
   if (!v.verified) {
     throw v;
   }
 }
 
+const documentLoaderDefault = defaultDocumentLoader(null);
 export async function documentLoader(url) {
   let document;
   if (url.startsWith('did:demo:')) {
     document = demoDid(url);
-  } else if (url.startsWith('did:')) {
-    document = await resolveDid(url);
   } else {
-    const resp = await axios.get(url);
-    document = resp.data;
+    document = (await documentLoaderDefault(url)).document;
   }
   return {
     documentUrl: url,
     document,
   };
-}
-
-async function resolveDid(did) {
-  const encodedDid = encodeURIComponent(did);
-  const resp = await axios.get(`https://resolver.identity.foundation/1.0/identifiers/${encodedDid}`);
-  return resp.data.didDocument;
 }
 
 function demoDid(did) {
@@ -78,7 +60,6 @@ function demoDid(did) {
 }
 
 export async function createCred(issuer, credentialSubject, ed25519privateKeyBase58, issuerPk58) {
-  console.log('rify', rify)
   const credential = {
     '@context': ['https://www.w3.org/2018/credentials/v1'],
     id: generateUUID(),
@@ -103,9 +84,14 @@ async function ed25519suite54(did, privateKeyBase58, publicKeyBase58) {
     privateKeyBase58,
     publicKeyBase58,
   });
-  console.log('keypair', keypair, keypair.signer())
   const suite = new Ed25519Signature2018({
     verificationMethod,
+    keypair: {
+      sign: async function(data) {
+        const signed = await keypair.signer().sign({ data });
+        return signed;
+      }
+    },
     signer: keypair.signer(),
   });
   suite.verificationMethod = verificationMethod;

@@ -25,12 +25,12 @@ export default async function createAgePresentation(imageUri) {
     }),
   ]);
   const pres = await createPres(creds);
-  console.log('pres', pres)
   const expPres = await expand(pres);
   const toProve = [
     { Iri: imageUri },
     { Iri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' },
     { Iri: 'https://example.com/OfAge' },
+    // { DefaultGraph: true },
   ];
   const proof = await proveCompositeClaims(expPres, [toProve], rules);
   pres['https://www.dock.io/rdf2020#logicV1'] = proof;

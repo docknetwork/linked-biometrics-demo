@@ -109,20 +109,29 @@ export default function IssuePanel({ onClose, uploadedImage }) {
   const [credential, setCredential] = useState();
   const [imageData, setImageData] = useState();
 
+  function handleError(e) {
+    console.error(e);
+    if (e.CantProve) {
+      setStatusText('Can\'t prove: ' + e.CantProve);
+    } else {
+      setStatusText(e.toString());
+    }
+  }
+
   async function main() {
     if (!uploadedImage) {
       try {
         await linkWebcam();
         setStatusText('Take a picture');
       } catch (e) {
-        setStatusText(e.toString());
+        handleError(e);
       }
     } else {
       try {
         const blob = unwrapSingle([uploadedImage]);
         await issueForBlob(blob);
       } catch (e) {
-        setStatusText(e.toString());
+        handleError(e);
       }
     }
   }
